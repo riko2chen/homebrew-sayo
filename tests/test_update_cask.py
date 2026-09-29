@@ -124,6 +124,20 @@ class HomebrewUpdateTests(unittest.TestCase):
                 updater.update(self.root)
         self.assertEqual(self.path.read_bytes(), original)
 
+    def test_newer_release_replaces_previous_recipe_only_after_download_verification(self):
+        original = self.seed()
+        self.release = json.loads(json.dumps(self.release).replace("0.2.0", "0.2.1").replace("2000", "2001"))
+        self.prefix = self.prefix.replace("0.2.0", "0.2.1")
+        self.filename = self.filename.replace("0.2.0", "0.2.1").replace("2000", "2001")
+        self.manifest = self.manifest.replace("0.2.0", "0.2.1").replace("2000", "2001")
+        self.feed = self.feed.replace("0.2.0", "0.2.1").replace("2000", "2001")
+        with self.assertRaisesRegex(ValueError, "mismatch"):
+            self.update(b"corrupt")
+        self.assertEqual(self.path.read_bytes(), original)
+        changed, _ = self.update()
+        self.assertTrue(changed)
+        self.assertIn('version "0.2.1,2001"', self.path.read_text())
+
     def test_version_bounds_and_unexpected_template_tokens_are_rejected(self):
         for version in ("0.100.0", "0.1.1000", "0.2.0-beta", "00.2.0", "0.2.0/other"):
             with self.subTest(version=version), self.assertRaises(ValueError):
