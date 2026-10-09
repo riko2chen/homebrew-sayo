@@ -1,6 +1,6 @@
 cask "sayo" do
-  version "0.2.4,2004"
-  sha256 "0ac30ee2f539de36f8ee71b869d452298f82ee2f7f3ab694355007621d929ed7"
+  version "0.2.5,2005"
+  sha256 "d9fefedef13ad555a62c584a0f8f3db941029ff98e8f8aeab3f841ec1ae25ad9"
 
   url "https://github.com/riko2chen/Sayo/releases/download/v#{version.csv.first}/Sayo-#{version.csv.first}-#{version.csv.second}.dmg"
   name "Sayo"
